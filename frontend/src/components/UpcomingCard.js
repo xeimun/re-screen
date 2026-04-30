@@ -15,7 +15,7 @@ const UpcomingCard = forwardRef(({movie, onClick}, ref) => {
         <div
             ref={ref}
             onClick={onClick}
-            className="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg cursor-pointer transition"
+            className="app-card-surface cursor-pointer overflow-hidden rounded-xl transition hover:-translate-y-0.5 hover:shadow-[0_22px_48px_rgba(4,10,20,0.20)]"
         >
             {/* 포스터 이미지 */}
             <div className="relative aspect-[1/1.4] bg-black">
@@ -37,13 +37,13 @@ const UpcomingCard = forwardRef(({movie, onClick}, ref) => {
             {/* 텍스트 정보 */}
             <div className="p-3 text-left">
                 <h3
-                    className="font-semibold text-base truncate"
+                    className="truncate text-base font-semibold text-[#122033]"
                     title={title}
                 >
                     {title}
                 </h3>
-                <p className="text-sm text-gray-500">개봉일: {formattedDate}</p>
-                <p className="text-sm text-yellow-600 font-semibold">
+                <p className="text-sm text-[#62748a]">개봉일: {formattedDate}</p>
+                <p className="text-sm font-semibold text-[#9a6a10]">
                     ⭐ {formattedRating}
                 </p>
             </div>

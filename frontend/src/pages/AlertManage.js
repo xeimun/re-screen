@@ -57,7 +57,7 @@ const AlertManage = () => {
 
     if (!isAuthenticated) {
         return (
-            <main className="min-h-screen flex items-center justify-center text-lg">
+            <main className="app-page-bg min-h-screen flex items-center justify-center text-lg">
                 로그인이 필요합니다.
             </main>
         );
@@ -65,7 +65,7 @@ const AlertManage = () => {
 
     if (loading) {
         return (
-            <main className="min-h-screen flex items-center justify-center text-gray-500">
+            <main className="app-page-bg min-h-screen flex items-center justify-center text-gray-500">
                 불러오는 중...
             </main>
         );
@@ -73,14 +73,14 @@ const AlertManage = () => {
 
     if (alerts.length === 0) {
         return (
-            <main className="min-h-screen flex items-center justify-center text-gray-600">
+            <main className="app-page-bg min-h-screen flex items-center justify-center text-gray-600">
                 등록된 알림이 없습니다.
             </main>
         );
     }
 
     return (
-        <main className="min-h-screen px-4 py-16 text-center bg-white">
+        <main className="app-page-bg min-h-screen px-4 py-16 text-center">
             <h1 className="text-4xl font-bold text-center mb-8">등록한 알림 관리</h1>
 
             <div

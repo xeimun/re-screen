@@ -8,7 +8,7 @@ const AlertCard = ({alert, isSelected, onSelect, onDelete}) => {
 
     return (
         <div
-            className="rounded-xl overflow-hidden shadow hover:shadow-lg transition cursor-pointer"
+            className="app-card-surface cursor-pointer overflow-hidden rounded-xl transition hover:-translate-y-0.5 hover:shadow-[0_22px_48px_rgba(4,10,20,0.20)]"
             onClick={handleCardClick}
         >
             {/* 포스터 이미지 */}
@@ -46,11 +46,11 @@ const AlertCard = ({alert, isSelected, onSelect, onDelete}) => {
             </div>
 
             {/* 텍스트 정보 */}
-            <div className="p-3 text-left bg-white">
-                <h3 className="font-semibold text-base truncate" title={alert.movieTitle}>
+            <div className="p-3 text-left">
+                <h3 className="truncate text-base font-semibold text-[#122033]" title={alert.movieTitle}>
                     {alert.movieTitle}
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-[#62748a]">
                     등록일: {new Date(alert.registeredAt).toLocaleDateString()}
                 </p>
             </div>

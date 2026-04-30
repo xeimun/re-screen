@@ -27,7 +27,7 @@ const Profile = () => {
     }, []);
 
     return (
-        <div>
+        <main className="app-page-bg min-h-screen px-4 py-16">
             <h2>내 정보</h2>
             {message && <p>{message}</p>}
             {user && (
@@ -36,7 +36,7 @@ const Profile = () => {
                     <p>닉네임: {user.nickname}</p>
                 </div>
             )}
-        </div>
+        </main>
     );
 };
 

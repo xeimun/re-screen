@@ -21,14 +21,14 @@ const Signup = () => {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            <div className="bg-white p-8 rounded-lg shadow-md w-96">
-                <h2 className="text-2xl font-bold mb-4 text-center">회원가입</h2>
+        <div className="app-page-bg flex min-h-screen items-center justify-center">
+            <div className="w-96 rounded-lg bg-white p-8 text-gray-900 shadow-md">
+                <h2 className="mb-4 text-center text-2xl font-bold text-gray-900">회원가입</h2>
                 <form onSubmit={handleSignup} className="flex flex-col space-y-4">
                     <input
                         type="email"
                         placeholder="이메일"
-                        className="border p-2 rounded w-full"
+                        className="w-full rounded border p-2 text-gray-900 placeholder:text-gray-400"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
@@ -36,7 +36,7 @@ const Signup = () => {
                     <input
                         type="password"
                         placeholder="비밀번호"
-                        className="border p-2 rounded w-full"
+                        className="w-full rounded border p-2 text-gray-900 placeholder:text-gray-400"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
@@ -44,7 +44,7 @@ const Signup = () => {
                     <input
                         type="text"
                         placeholder="닉네임"
-                        className="border p-2 rounded w-full"
+                        className="w-full rounded border p-2 text-gray-900 placeholder:text-gray-400"
                         value={nickname}
                         onChange={(e) => setNickname(e.target.value)}
                         required

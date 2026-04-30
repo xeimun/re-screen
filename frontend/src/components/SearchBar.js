@@ -8,11 +8,11 @@ const SearchBar = ({query, setQuery, onSearch}) => {
     };
 
     return (
-        <div className="flex items-center border-2 border-gray-400 rounded-full px-4 py-2 w-full max-w-md shadow-sm">
+        <div className="app-surface flex w-full max-w-md items-center rounded-full px-4 py-2">
             <input
                 type="text"
                 placeholder="예) 이웃집 토토로"
-                className="flex-grow outline-none text-gray-600 placeholder-gray-400"
+                className="flex-grow bg-transparent text-[#17304f] outline-none placeholder:text-[#6e7f97]"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -20,7 +20,7 @@ const SearchBar = ({query, setQuery, onSearch}) => {
             />
             <button onClick={onSearch}>
                 <svg
-                    className="w-5 h-5 text-gray-500"
+                    className="h-5 w-5 text-[#58708d]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"

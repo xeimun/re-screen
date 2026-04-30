@@ -60,7 +60,7 @@ const MovieCard = forwardRef(({movie, isSelected, onSelect}, ref) => {
     return (
         <div
             ref={ref}
-            className="rounded-xl overflow-hidden shadow hover:shadow-lg transition cursor-pointer"
+            className="app-card-surface cursor-pointer overflow-hidden rounded-xl transition hover:-translate-y-0.5 hover:shadow-[0_22px_48px_rgba(4,10,20,0.20)]"
             onClick={handleCardClick}
         >
             <div className="relative aspect-[1/1.4] bg-black">
@@ -104,11 +104,11 @@ const MovieCard = forwardRef(({movie, isSelected, onSelect}, ref) => {
                 )}
             </div>
 
-            <div className="p-3 text-left bg-white">
-                <h3 className="font-semibold text-base truncate" title={movie.title}>
+            <div className="p-3 text-left">
+                <h3 className="truncate text-base font-semibold text-[#122033]" title={movie.title}>
                     {movie.title}
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-[#62748a]">
                     개봉일: {movie.release_date?.split("-")[0]}
                 </p>
             </div>

@@ -63,7 +63,7 @@ const UpcomingPage = () => {
     }, [page]);
 
     return (
-        <main className="min-h-screen px-4 py-16 text-center bg-white">
+        <main className="app-page-bg min-h-screen px-4 py-16 text-center">
             <h1 className="text-4xl font-bold mb-8">개봉 예정 영화</h1>
 
             {error && <p className="text-red-500 text-sm mb-4">{error}</p>}

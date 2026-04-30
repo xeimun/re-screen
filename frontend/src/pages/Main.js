@@ -98,7 +98,7 @@ const Main = () => {
     }, [location.pathname]);
 
     return (
-        <main className="px-4 py-16 text-center bg-white min-h-screen">
+        <main className="app-page-bg min-h-screen px-4 py-16 text-center">
             <h1 className="text-4xl font-bold mb-8">영화 (재)개봉 알림</h1>
 
             <div className="flex flex-col items-center">
