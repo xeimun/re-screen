@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import com.rerelease.movie.rereleasemovie.dto.MovieAlertRequest;
 import com.rerelease.movie.rereleasemovie.dto.MovieAlertResponse;
+import com.rerelease.movie.rereleasemovie.exceptions.AlertNotFoundException;
 import com.rerelease.movie.rereleasemovie.exceptions.MovieAlreadyRegisteredException;
 import com.rerelease.movie.rereleasemovie.model.UserMovieAlert;
 import com.rerelease.movie.rereleasemovie.model.Users;
@@ -84,6 +85,21 @@ class MovieAlertServiceImplTest {
 
         verify(userMovieAlertRepository, never()).save(any(UserMovieAlert.class));
         verify(notificationQueueService, never()).addAlertToQueue(any());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 알림을 삭제하려 하면 알림 없음 예외가 발생한다")
+    void deleteUserMovieAlertRejectsMissingAlert() {
+        Users user = createUser(1L, "user@example.com");
+
+        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
+        when(userMovieAlertRepository.findById(10L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> movieAlertService.deleteUserMovieAlert("user@example.com", 10L))
+                .isInstanceOf(AlertNotFoundException.class)
+                .hasMessage("해당 알림을 찾을 수 없습니다.");
+
+        verify(userMovieAlertRepository, never()).delete(any(UserMovieAlert.class));
     }
 
     @Test

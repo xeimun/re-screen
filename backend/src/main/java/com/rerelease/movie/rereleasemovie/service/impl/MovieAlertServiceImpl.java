@@ -3,6 +3,7 @@ package com.rerelease.movie.rereleasemovie.service.impl;
 import com.rerelease.movie.rereleasemovie.dto.MovieAlertRequest;
 import com.rerelease.movie.rereleasemovie.dto.MovieAlertResponse;
 import com.rerelease.movie.rereleasemovie.dto.UserAlertManageDto;
+import com.rerelease.movie.rereleasemovie.exceptions.AlertNotFoundException;
 import com.rerelease.movie.rereleasemovie.exceptions.MovieAlreadyRegisteredException;
 import com.rerelease.movie.rereleasemovie.exceptions.UserNotFoundException;
 import com.rerelease.movie.rereleasemovie.model.UserMovieAlert;
@@ -99,7 +100,7 @@ public class MovieAlertServiceImpl implements MovieAlertService {
         // 2. 알림 조회 (해당 사용자의 것인지 확인)
         UserMovieAlert alert = userMovieAlertRepository.findById(alertId)
                                                        .orElseThrow(
-                                                               () -> new IllegalArgumentException("해당 알림을 찾을 수 없습니다."));
+                                                               () -> new AlertNotFoundException("해당 알림을 찾을 수 없습니다."));
 
         if (!alert.getUser()
                   .getId()
