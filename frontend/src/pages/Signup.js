@@ -1,20 +1,20 @@
 import {useState} from "react";
-import {useNavigate} from "react-router-dom"; // 페이지 이동을 위한 useNavigate 추가
-import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import {signupUser} from "../api/authApi";
 
 const Signup = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [nickname, setNickname] = useState("");
     const [message, setMessage] = useState("");
-    const navigate = useNavigate(); // 페이지 이동 함수
+    const navigate = useNavigate();
 
     const handleSignup = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:8080/api/auth/signup", {email, password, nickname});
+            await signupUser({email, password, nickname});
             setMessage("회원가입 성공:) 로그인 페이지로 이동합니다.");
-            setTimeout(() => navigate("/login"), 1500); // 1.5초 후 로그인 페이지로 이동
+            setTimeout(() => navigate("/login"), 1500);
         } catch (error) {
             setMessage(error.response?.data?.message || "회원가입 실패");
         }

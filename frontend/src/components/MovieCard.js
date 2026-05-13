@@ -1,7 +1,7 @@
 import React, {useContext, useState, forwardRef} from "react";
 import {AuthContext} from "../context/AuthContext";
 import {useNavigate} from "react-router-dom";
-import axios from "../api/axiosInstance";
+import {registerMovieAlert} from "../api/alertApi";
 
 const MovieCard = forwardRef(({movie, isSelected, onSelect}, ref) => {
     const {isAuthenticated} = useContext(AuthContext);
@@ -25,18 +25,15 @@ const MovieCard = forwardRef(({movie, isSelected, onSelect}, ref) => {
         }
 
         try {
-            const response = await axios.post("/api/alerts/register", {
+            await registerMovieAlert({
                 tmdbId: movie.id,
                 title: movie.title,
                 posterPath: movie.poster_path,
-                releaseYear: movie.release_date.split("-")[0],
             });
 
-            if (response.status === 200) {
-                setSuccessMessage("✅ 등록 완료되었습니다.");
-                setErrorMessage("");
-                setTimeout(() => setSuccessMessage(""), 3000);
-            }
+            setSuccessMessage("✅ 등록 완료되었습니다.");
+            setErrorMessage("");
+            setTimeout(() => setSuccessMessage(""), 3000);
         } catch (error) {
             setSuccessMessage("");
             if (error.response) {

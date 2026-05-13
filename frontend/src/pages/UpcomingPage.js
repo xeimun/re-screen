@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
-import axios from "../api/axiosInstance";
 import UpcomingCard from "../components/UpcomingCard";
 import MovieModal from "../components/MovieModal";
 import LoadingMessage from "../components/LoadingMessage";
+import {getUpcomingMovies} from "../api/movieApi";
 
 const UpcomingPage = () => {
     const [movies, setMovies] = useState([]);
@@ -40,9 +40,9 @@ const UpcomingPage = () => {
         setError("");
 
         try {
-            const res = await axios.get(`/api/tmdb/upcoming?page=${pageNum}`);
-            const newMovies = res.data.results;
-            const total = res.data.total_pages;
+            const data = await getUpcomingMovies(pageNum);
+            const newMovies = data.results;
+            const total = data.total_pages;
 
             if (newMovies) {
                 setMovies((prev) => [...prev, ...newMovies]);

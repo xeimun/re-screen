@@ -1,6 +1,6 @@
 import {useState, useContext} from "react";
-import axios from "axios";
 import {AuthContext} from "../context/AuthContext";
+import {loginUser} from "../api/authApi";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -11,8 +11,8 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8080/api/auth/login", {email, password});
-            login(response.data.token);
+            const response = await loginUser({email, password});
+            login(response.token);
             setMessage("로그인 성공:)");
         } catch (error) {
             setMessage(error.response?.data?.message || "아이디 또는 비밀번호가 올바르지 않습니다.");

@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import axios from "axios";
+import {getCurrentUser} from "../api/authApi";
 
 const Profile = () => {
     const [user, setUser] = useState(null);
@@ -7,17 +7,9 @@ const Profile = () => {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                setMessage("로그인이 필요합니다.");
-                return;
-            }
-
             try {
-                const response = await axios.get("http://localhost:8080/api/auth/me", {
-                    headers: {Authorization: `Bearer ${token}`},
-                });
-                setUser(response.data);
+                const user = await getCurrentUser();
+                setUser(user);
             } catch (error) {
                 setMessage("사용자 정보를 불러올 수 없습니다.");
             }

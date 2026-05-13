@@ -1,9 +1,7 @@
 import axios from "axios";
 
-// API 기본 URL 설정
-const API_URL = "http://localhost:8080";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8080";
 
-// Axios 인스턴스 생성
 const axiosInstance = axios.create({
     baseURL: API_URL,
     headers: {
@@ -11,7 +9,6 @@ const axiosInstance = axios.create({
     },
 });
 
-// 요청 인터셉터: 모든 요청에 JWT 자동 포함
 axiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("token");
@@ -25,14 +22,15 @@ axiosInstance.interceptors.request.use(
     }
 );
 
-// 응답 인터셉터: 만료된 토큰 처리
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401) {
+        const isLoginRequest = error.config?.url === "/api/auth/login";
+
+        if (error.response?.status === 401 && !isLoginRequest) {
             console.error("인증 실패: 로그아웃 처리");
             localStorage.removeItem("token");
-            window.location.href = "/login"; // 로그인 페이지로 이동
+            window.location.href = "/login";
         }
         return Promise.reject(error);
     }

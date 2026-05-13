@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from "react";
-import {getUserAlerts, deleteUserAlert} from "../api/movieApi";
+import {getUserAlerts, deleteUserAlert} from "../api/alertApi";
 import {useAuth} from "../context/AuthContext";
 import AlertCard from "../components/AlertCard";
 
