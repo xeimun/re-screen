@@ -8,14 +8,16 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class JwtUtil {
 
     private final Key key;
-    private static final long EXPIRATION_TIME = 1000 * 60 * 15; // 15분 (밀리초 단위)
+    private static final long EXPIRATION_TIME = 1000 * 60 * 15;
 
     public JwtUtil(@Value("${secret.key}") String secretKey) {
         if (secretKey == null || secretKey.length() < 32) {
@@ -25,18 +27,18 @@ public class JwtUtil {
     }
 
     public String generateToken(String email) {
-        return Jwts.builder() // JWT 생성을 위한 JwtBuilder 반환
-                   .setSubject(email) // 사용자 식별 정보 (subject)
-                   .setIssuedAt(new Date()) // 토큰 발행 시간
-                   .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) // 만료 시간
-                   .signWith(key, SignatureAlgorithm.HS256) // 서명(Signature)
+        return Jwts.builder()
+                   .setSubject(email)
+                   .setIssuedAt(new Date())
+                   .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                   .signWith(key, SignatureAlgorithm.HS256)
                    .compact();
     }
 
     public String extractUsername(String token) {
-        return Jwts.parserBuilder() // JWT 검증을 위한 JwtParserBuilder 반환
+        return Jwts.parserBuilder()
                    .setSigningKey(key)
-                   .build() // JwtParser 객체 생성
+                   .build()
                    .parseClaimsJws(token)
                    .getBody()
                    .getSubject();
@@ -48,16 +50,16 @@ public class JwtUtil {
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token);
-            return true; // 유효한 토큰
+            return true;
         } catch (ExpiredJwtException e) {
-            System.out.println("토큰이 만료되었습니다.");
+            log.debug("토큰이 만료되었습니다.", e);
         } catch (MalformedJwtException e) {
-            System.out.println("잘못된 JWT 토큰입니다.");
+            log.debug("잘못된 JWT 토큰입니다.", e);
         } catch (UnsupportedJwtException e) {
-            System.out.println("지원되지 않는 JWT 토큰입니다.");
+            log.debug("지원되지 않는 JWT 토큰입니다.", e);
         } catch (IllegalArgumentException e) {
-            System.out.println("JWT 토큰이 비어 있습니다.");
+            log.debug("JWT 토큰이 비어 있습니다.", e);
         }
-        return false; // 유효하지 않은 토큰
+        return false;
     }
 }

@@ -16,7 +16,6 @@ const Main = () => {
     const observer = useRef(null);
     const location = useLocation();
 
-    // 마지막 카드에 연결될 IntersectionObserver
     const lastMovieRef = useCallback(
         (node) => {
             if (loading || !node) return;
@@ -33,7 +32,6 @@ const Main = () => {
         [loading, page, totalPages]
     );
 
-    // 검색 실행
     const handleSearch = () => {
         if (!query.trim()) return;
 
@@ -45,7 +43,6 @@ const Main = () => {
         fetchMovies(query, 1);
     };
 
-    // TMDB에서 영화 검색 결과 가져오기
     const fetchMovies = async (q, pageNum) => {
         setLoading(true);
         try {
@@ -67,25 +64,12 @@ const Main = () => {
         }
     };
 
-
-    // 검색 모드 선택 1. 실시간 검색 모드 2. 버튼 기반 검색 모드
-
-    /*
-    // 1. 실시간 검색 모드 (검색어 변경 또는 페이지 변경 시 자동 요청)
-    useEffect(() => {
-        if (!query) return;
-        fetchMovies(query, page);
-    }, [query, page]);
-    */
-
-    // 2. 버튼 기반 검색 모드 (검색 버튼(또는 Enter)을 눌렀을 때만 요청)
     useEffect(() => {
         if (hasSearched && page > 1 && query) {
             fetchMovies(query, page);
         }
     }, [hasSearched, page, query]);
 
-    // 메인 이동 시 상태 초기화
     useEffect(() => {
         if (location.pathname === "/") {
             setQuery("");

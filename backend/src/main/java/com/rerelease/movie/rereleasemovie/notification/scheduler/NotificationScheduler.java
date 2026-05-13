@@ -24,7 +24,6 @@ public class NotificationScheduler {
     public void processNotifications() {
         Set<Long> availableMovieIds = new HashSet<>();
 
-        // 모든 개봉 예정 영화 조회
         for (int page = 1; page <= tmdbApiService.getTotalPagesForUpcoming(); page++) {
             TmdbMovieListResponseDto upcomingMovies = tmdbApiService.getUpcomingMovies(page);
             if (upcomingMovies != null) {
@@ -33,7 +32,6 @@ public class NotificationScheduler {
             }
         }
 
-        // 모든 현재 개봉 중인 영화 조회
         for (int page = 1; page <= tmdbApiService.getTotalPagesForNowPlaying(); page++) {
             TmdbMovieListResponseDto nowPlayingMovies = tmdbApiService.getNowPlayingMovies(page);
             if (nowPlayingMovies != null) {
@@ -42,10 +40,8 @@ public class NotificationScheduler {
             }
         }
 
-        // 알림 큐에서 재시도 횟수 3 미만인 데이터 조회
         List<NotificationQueue> queues = notificationQueueRepository.findByRetryCountLessThan(3);
 
-        // 알림 전송 실행
         for (NotificationQueue queue : queues) {
             if (availableMovieIds.contains(queue.getUserMovieAlert()
                                                 .getMovieId())) {

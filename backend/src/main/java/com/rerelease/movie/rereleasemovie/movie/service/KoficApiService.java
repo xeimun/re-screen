@@ -18,7 +18,6 @@ public class KoficApiService {
     private String koficApiKey;
 
     public List<MovieInfoDto> searchMoviesByName(String movieName) {
-        // KOFIC API 요청 및 응답 처리
         MovieListResponseDto response = koficWebClient.get()
                                                       .uri(uriBuilder -> uriBuilder
                                                               .path("/movie/searchMovieList.json")
@@ -29,7 +28,6 @@ public class KoficApiService {
                                                       .bodyToMono(MovieListResponseDto.class)
                                                       .block();
 
-        // API 응답이 null이거나 데이터가 없는 경우
         if (response == null || response.getMovieList()
                                         .isEmpty()) {
             return List.of();

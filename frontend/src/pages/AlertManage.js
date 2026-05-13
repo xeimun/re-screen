@@ -26,7 +26,7 @@ const AlertManage = () => {
             try {
                 await deleteUserAlert(alertId);
                 fetchAlerts();
-                setSelectedAlert(null); // 삭제 시 선택 해제
+                setSelectedAlert(null);
             } catch (error) {
                 console.error("알림 삭제 실패:", error);
                 alert("삭제 중 오류가 발생했습니다.");
@@ -34,14 +34,12 @@ const AlertManage = () => {
         }
     };
 
-    // 초기 알림 목록 불러오기
     useEffect(() => {
         if (isAuthenticated) {
             fetchAlerts();
         }
     }, [isAuthenticated]);
 
-    // 카드 외부 클릭 시 선택 해제
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (

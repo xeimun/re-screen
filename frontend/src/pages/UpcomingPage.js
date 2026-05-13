@@ -13,7 +13,6 @@ const UpcomingPage = () => {
     const [selectedMovie, setSelectedMovie] = useState(null);
     const observer = useRef(null);
 
-    // 마지막 카드에 연결될 IntersectionObserver
     const lastMovieRef = useCallback(
         (node) => {
             if (loading || !node) return;
@@ -34,7 +33,6 @@ const UpcomingPage = () => {
         [loading, page, totalPages]
     );
 
-    // TMDB에서 영화 데이터 가져오기
     const fetchMovies = async (pageNum) => {
         setLoading(true);
         setError("");
@@ -57,7 +55,6 @@ const UpcomingPage = () => {
         }
     };
 
-    // 페이지 변경될 때마다 호출
     useEffect(() => {
         fetchMovies(page);
     }, [page]);

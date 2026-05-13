@@ -27,17 +27,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // CSRF 보안 비활성화 (API 개발 시 필요)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource)) // Spring Security 필터 체인에 CORS 설정 적용
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .sessionManagement(session -> session.sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS)) // 세션 사용 안 함(JWT 인증 방식 사용)
+                        SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/api/kofic/**", "/api/tmdb/**")
-                        .permitAll() // 회원가입, 로그인, Open API 요청은 인증 없이 허용
+                        .permitAll()
                         .anyRequest()
-                        .authenticated() // 그 외 모든 요청은 인증 필요
+                        .authenticated()
                 )
-                // JWT 인증 방식에서는 UsernamePasswordAuthenticationFilter를 사용하지 않으므로, JWT 인증 필터를 먼저 실행해야 함
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsService),
                         UsernamePasswordAuthenticationFilter.class);
 
