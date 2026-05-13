@@ -26,6 +26,16 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("이미 가입된 이메일 예외는 400 응답으로 변환한다")
+    void handleEmailAlreadyRegisteredReturnsBadRequest() {
+        ResponseEntity<ErrorResponseDto> response = handler.handleEmailAlreadyRegistered(
+                new EmailAlreadyRegisteredException("이미 가입된 이메일입니다.")
+        );
+
+        assertError(response, HttpStatus.BAD_REQUEST, "이미 가입된 이메일입니다.");
+    }
+
+    @Test
     @DisplayName("중복 영화 등록 예외는 409 응답으로 변환한다")
     void handleMovieAlreadyRegisteredReturnsConflict() {
         ResponseEntity<ErrorResponseDto> response = handler.handleMovieAlreadyRegistered(

@@ -22,6 +22,11 @@ public class GlobalExceptionHandler {
         return error(HttpStatus.UNAUTHORIZED, e.getMessage());
     }
 
+    @ExceptionHandler(EmailAlreadyRegisteredException.class)
+    public ResponseEntity<ErrorResponseDto> handleEmailAlreadyRegistered(EmailAlreadyRegisteredException e) {
+        return error(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
     @ExceptionHandler(MovieAlreadyRegisteredException.class)
     public ResponseEntity<ErrorResponseDto> handleMovieAlreadyRegistered(MovieAlreadyRegisteredException e) {
         return error(HttpStatus.CONFLICT, e.getMessage());
