@@ -89,6 +89,7 @@ public class MovieAlertService {
             throw new AccessDeniedException("본인의 알림만 삭제할 수 있습니다.");
         }
 
+        notificationQueueService.deleteByAlert(alert);
         userMovieAlertRepository.delete(alert);
     }
 }

@@ -38,6 +38,7 @@ public class NotificationQueueService {
         try {
             emailNotificationSender.send(alert);
             notificationLogService.saveSuccess(alert);
+            notificationQueueRepository.delete(queue);
             userMovieAlertRepository.delete(alert);
         } catch (Exception e) {
             int updatedRetryCount = queue.getRetryCount() + 1;
@@ -46,8 +47,14 @@ public class NotificationQueueService {
 
             if (updatedRetryCount >= 3) {
                 notificationLogService.saveFailure(alert, e);
+                notificationQueueRepository.delete(queue);
                 userMovieAlertRepository.delete(alert);
             }
         }
+    }
+
+    @Transactional
+    public void deleteByAlert(UserMovieAlert alert) {
+        notificationQueueRepository.deleteByUserMovieAlert(alert);
     }
 }

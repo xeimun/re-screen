@@ -88,6 +88,21 @@ class MovieAlertServiceTest {
     }
 
     @Test
+    @DisplayName("본인의 알림 삭제 시 NotificationQueue를 먼저 삭제하고 UserMovieAlert를 삭제한다")
+    void deleteUserMovieAlertDeletesNotificationQueueBeforeAlert() {
+        Users user = createUser(1L, "user@example.com");
+        UserMovieAlert alert = createAlert(10L, user, 100L, "Inception", "/poster.jpg");
+
+        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(user));
+        when(userMovieAlertRepository.findById(10L)).thenReturn(Optional.of(alert));
+
+        movieAlertService.deleteUserMovieAlert("user@example.com", 10L);
+
+        verify(notificationQueueService).deleteByAlert(alert);
+        verify(userMovieAlertRepository).delete(alert);
+    }
+
+    @Test
     @DisplayName("존재하지 않는 알림을 삭제하려 하면 알림 없음 예외가 발생한다")
     void deleteUserMovieAlertRejectsMissingAlert() {
         Users user = createUser(1L, "user@example.com");

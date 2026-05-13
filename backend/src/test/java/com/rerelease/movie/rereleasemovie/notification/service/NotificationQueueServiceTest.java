@@ -2,6 +2,7 @@ package com.rerelease.movie.rereleasemovie.notification.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.InOrder;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -82,7 +84,9 @@ class NotificationQueueServiceTest {
 
         verify(emailNotificationSender).send(alert);
         verify(notificationLogService).saveSuccess(alert);
-        verify(userMovieAlertRepository).delete(alert);
+        InOrder inOrder = inOrder(notificationQueueRepository, userMovieAlertRepository);
+        inOrder.verify(notificationQueueRepository).delete(queue);
+        inOrder.verify(userMovieAlertRepository).delete(alert);
         verify(notificationQueueRepository, never()).save(any(NotificationQueue.class));
     }
 
@@ -100,6 +104,7 @@ class NotificationQueueServiceTest {
         notificationQueueService.sendNotification(queue);
 
         verify(notificationQueueRepository).save(queue);
+        verify(notificationQueueRepository, never()).delete(any(NotificationQueue.class));
         verify(notificationLogService, never()).saveFailure(any(UserMovieAlert.class), any(Exception.class));
         verify(userMovieAlertRepository, never()).delete(any(UserMovieAlert.class));
     }
@@ -119,7 +124,19 @@ class NotificationQueueServiceTest {
 
         verify(notificationQueueRepository).save(queue);
         verify(notificationLogService).saveFailure(alert, failure);
-        verify(userMovieAlertRepository).delete(alert);
+        InOrder inOrder = inOrder(notificationQueueRepository, userMovieAlertRepository);
+        inOrder.verify(notificationQueueRepository).delete(queue);
+        inOrder.verify(userMovieAlertRepository).delete(alert);
+    }
+
+    @Test
+    @DisplayName("사용자 알림 삭제 시 연결된 NotificationQueue를 삭제한다")
+    void deleteByAlertDeletesQueueByUserMovieAlert() {
+        UserMovieAlert alert = createAlert();
+
+        notificationQueueService.deleteByAlert(alert);
+
+        verify(notificationQueueRepository).deleteByUserMovieAlert(alert);
     }
 
     private NotificationQueue createQueue(UserMovieAlert alert, int retryCount) {
