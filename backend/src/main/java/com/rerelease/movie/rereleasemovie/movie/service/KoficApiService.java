@@ -18,11 +18,13 @@ public class KoficApiService {
     private String koficApiKey;
 
     public List<MovieInfoDto> searchMoviesByName(String movieName) {
-        String url = "/movie/searchMovieList.json?key=" + koficApiKey + "&movieNm=" + movieName;
-
         // KOFIC API 요청 및 응답 처리
         MovieListResponseDto response = koficWebClient.get()
-                                                      .uri(url)
+                                                      .uri(uriBuilder -> uriBuilder
+                                                              .path("/movie/searchMovieList.json")
+                                                              .queryParam("key", koficApiKey)
+                                                              .queryParam("movieNm", movieName)
+                                                              .build())
                                                       .retrieve()
                                                       .bodyToMono(MovieListResponseDto.class)
                                                       .block();

@@ -11,6 +11,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 public class TmdbApiService {
 
+    private static final String LANGUAGE = "ko-KR";
+    private static final String REGION = "KR";
+    private static final int DEFAULT_TOTAL_PAGES = 1;
+
     private final WebClient tmdbWebClient;
 
     @Value("${tmdb.api.key}")  // application.properties에서 TMDB API 키 값을 주입
@@ -23,11 +27,15 @@ public class TmdbApiService {
      * @return TMDB API에서 반환된 개봉 예정 영화 목록 (`TmdbMovieListResponseDto`)
      */
     public TmdbMovieListResponseDto getUpcomingMovies(int page) {
-        String url = "/movie/upcoming?api_key=" + tmdbApiKey + "&language=ko-KR&region=KR&page=" + page;
-
-        return tmdbWebClient.get()  // GET 요청 수행
-                            .uri(url)  // 생성한 URL을 사용
-                            .retrieve()  // 응답을 받아 처리
+        return tmdbWebClient.get()
+                            .uri(uriBuilder -> uriBuilder
+                                    .path("/movie/upcoming")
+                                    .queryParam("api_key", tmdbApiKey)
+                                    .queryParam("language", LANGUAGE)
+                                    .queryParam("region", REGION)
+                                    .queryParam("page", page)
+                                    .build())
+                            .retrieve()
                             .bodyToMono(TmdbMovieListResponseDto.class)  // 응답 바디를 `TmdbMovieListResponseDto`로 변환
                             .block();  // 동기 방식으로 결과를 반환 (비동기 처리 시 block() 제거 필요)
     }
@@ -39,10 +47,14 @@ public class TmdbApiService {
      * @return TMDB API에서 반환된 현재 상영 중인 영화 목록 (`TmdbMovieListResponseDto`)
      */
     public TmdbMovieListResponseDto getNowPlayingMovies(int page) {  // 추가된 부분
-        String url = "/movie/now_playing?api_key=" + tmdbApiKey + "&language=ko-KR&region=KR&page=" + page;
-
         return tmdbWebClient.get()
-                            .uri(url)
+                            .uri(uriBuilder -> uriBuilder
+                                    .path("/movie/now_playing")
+                                    .queryParam("api_key", tmdbApiKey)
+                                    .queryParam("language", LANGUAGE)
+                                    .queryParam("region", REGION)
+                                    .queryParam("page", page)
+                                    .build())
                             .retrieve()
                             .bodyToMono(TmdbMovieListResponseDto.class)
                             .block();
@@ -54,11 +66,7 @@ public class TmdbApiService {
      * @return 총 페이지 수 (`totalPages` 값), 오류 발생 시 기본값 1 반환
      */
     public int getTotalPagesForUpcoming() {
-        TmdbMovieListResponseDto response = getUpcomingMovies(1);  // 첫 번째 페이지 데이터를 요청하여 총 페이지 수 확인
-        if (response != null) {
-            return response.getTotalPages();
-        }
-        return 1;  // 응답이 null이면 기본값 1 반환
+        return extractTotalPages(getUpcomingMovies(1));
     }
 
     /**
@@ -67,11 +75,7 @@ public class TmdbApiService {
      * @return 총 페이지 수 (`totalPages` 값), 오류 발생 시 기본값 1 반환
      */
     public int getTotalPagesForNowPlaying() {
-        TmdbMovieListResponseDto response = getNowPlayingMovies(1);
-        if (response != null) {
-            return response.getTotalPages();
-        }
-        return 1;
+        return extractTotalPages(getNowPlayingMovies(1));
     }
 
     /**
@@ -82,16 +86,24 @@ public class TmdbApiService {
      * @return TMDB 검색 결과를 담은 DTO (TmdbMovieSearchResponseDto)
      */
     public TmdbMovieSearchResponseDto searchMovies(String query, int page) {
-        String url = "/search/movie?api_key=" + tmdbApiKey
-                + "&language=ko-KR"
-                + "&query=" + query
-                + "&page=" + page;
-
         return tmdbWebClient.get()
-                            .uri(url)
+                            .uri(uriBuilder -> uriBuilder
+                                    .path("/search/movie")
+                                    .queryParam("api_key", tmdbApiKey)
+                                    .queryParam("language", LANGUAGE)
+                                    .queryParam("query", query)
+                                    .queryParam("page", page)
+                                    .build())
                             .retrieve()
                             .bodyToMono(TmdbMovieSearchResponseDto.class)
                             .block();
     }
 
+    private int extractTotalPages(TmdbMovieListResponseDto response) {
+        if (response == null || response.getTotalPages() == null) {
+            return DEFAULT_TOTAL_PAGES;
+        }
+
+        return response.getTotalPages();
+    }
 }
